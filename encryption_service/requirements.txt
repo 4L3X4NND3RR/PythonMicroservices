@@ -1,0 +1,7 @@
+grpcio==1.43.0
+grpcio-tools==1.43.0
+pika==1.2.0
+protobuf==3.19.4
+pycryptodome==3.14.1
+python-dotenv==0.19.2
+six==1.16.0

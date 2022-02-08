@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  rabbit:
+    container_name: rabbit
+    image: rabbitmq:3.9-management
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    volumes:
+      - ./conf/myrabbit.conf:/etc/rabbitmq/rabbitmq.config
+    networks:
+      - microservices
+  api:
+    container_name: api
+    image: encryption-api:1.0.0
+    ports:
+      - '8000:8000'
+    networks:
+      - microservices
+  encryption:
+    depends_on:
+      - rabbit
+    container_name: encryption
+    image: encryption-service:1.0.0
+    environment:
+      - PYTHONUNBUFFERED=1
+    ports:
+      - '50051'
+    networks:
+      - microservices
+  encrypted:
+    depends_on:
+      - rabbit
+    container_name: encrypted
+    image: encrypted-service:1.0.0
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - microservices
+  decrypted:
+    depends_on:
+      - rabbit
+    container_name: decrypted
+    image: decrypted-service:1.0.0
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - microservices
+
+
+
+networks:
+  microservices:
+    driver: bridge
